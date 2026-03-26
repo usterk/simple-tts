@@ -2,6 +2,8 @@
 """
 Claude Code Stop Hook - Speaks contextual TTS summary when Claude finishes.
 Reads <!-- TTS: message --> from last_assistant_message or transcript.
+Only speaks if a TTS tag is found — stays silent when Claude stops
+for permission prompts (notification hook handles those).
 """
 
 import sys
@@ -35,10 +37,12 @@ def main():
         if transcript_path:
             tts_text = extract_tts_from_transcript(transcript_path)
 
-    if not tts_text:
-        tts_text = "Skończyłem"
+    # Only speak if we found a TTS tag.
+    # If no tag: Claude likely stopped for a permission prompt,
+    # and the notification hook will handle speaking.
+    if tts_text:
+        speak(tts_text)
 
-    speak(tts_text)
     sys.exit(0)
 
 
