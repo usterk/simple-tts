@@ -58,7 +58,7 @@ Present ALL questions at once:
 >
 > 1. **Language** [**{detected, e.g. Polish}**]: _language for TTS messages_
 > 2. **Voice** [**{best voice for chosen language}**]: _which voice to use?_
-> 3. **Speed** [**250**]: _words per minute (200=normal, 250=slightly faster, 300=fast)_
+> 3. **Speed** [**220**]: _words per minute (200=normal, 220=slightly faster, 300=fast)_
 > 4. **Your name** [**skip**]: _optional — Claude will sometimes greet you by name (~30% of messages)_
 > 5. **Scope** [**global**]: _"global" (all projects) or "project" (this project only)_
 > 6. **Preview?** [**no**]: _say "yes" to hear a sample with your chosen settings_

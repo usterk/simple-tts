@@ -13,7 +13,7 @@ CONFIG_PATH = os.path.expanduser("~/.claude/simple-tts-config.json")
 
 DEFAULT_CONFIG = {
     "voice": "Krzysztof",
-    "rate": 250,
+    "rate": 220,
     "name": "",
     "name_chance": 0.3,
 }
