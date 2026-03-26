@@ -58,8 +58,10 @@ Present ALL questions at once:
 >
 > 1. **Language** [**{detected, e.g. Polish}**]: _language for TTS messages_
 > 2. **Voice** [**{best voice for chosen language}**]: _which voice to use?_
-> 3. **Your name** [**skip**]: _optional — Claude will sometimes greet you by name (~30% of messages)_
-> 4. **Scope** [**global**]: _"global" (all projects) or "project" (this project only)_
+> 3. **Speed** [**250**]: _words per minute (200=normal, 250=slightly faster, 300=fast)_
+> 4. **Your name** [**skip**]: _optional — Claude will sometimes greet you by name (~30% of messages)_
+> 5. **Scope** [**global**]: _"global" (all projects) or "project" (this project only)_
+> 6. **Preview?** [**no**]: _say "yes" to hear a sample with your chosen settings_
 
 Default voice per language (pick the highest quality available):
 - Polish: Krzysztof (Enhanced) or Ewa (Premium)
@@ -93,10 +95,20 @@ fi
 
 If the plugin cache is not found (e.g. using --plugin-dir), look in the source directory for wrapper.sh instead.
 
-**4b. Save config file** `~/.claude/simple-tts-config.json`:
+**4b. Preview (if requested)**
+
+If the user said "yes" to preview, run:
+```bash
+say -v "<voice>" -r <rate> "This is how I will sound. Testing one two three."
+```
+Use a sentence in the chosen language. After preview, ask: "Sound good? (Enter=yes, or adjust voice/speed)"
+If user wants changes, go back to questions.
+
+**4c. Save config file** `~/.claude/simple-tts-config.json`:
 ```json
 {
   "voice": "<chosen>",
+  "rate": <chosen rate, default 250>,
   "language": "<chosen language>",
   "name": "<name or empty string>",
   "name_chance": 0.3
@@ -180,7 +192,7 @@ Example values per language:
 ## Step 5: Test
 
 ```bash
-say -v "<voice>" "Setup complete!"
+say -v "<voice>" -r <rate> "Setup complete!"
 ```
 
 ## Step 6: Done

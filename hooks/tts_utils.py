@@ -13,6 +13,7 @@ CONFIG_PATH = os.path.expanduser("~/.claude/simple-tts-config.json")
 
 DEFAULT_CONFIG = {
     "voice": "Krzysztof",
+    "rate": 250,
     "name": "",
     "name_chance": 0.3,
 }
@@ -140,8 +141,9 @@ def speak(text):
             text = f"{name}, {text[0].lower() + text[1:]}" if len(text) > 1 else f"{name}, {text}"
 
     voice = config.get('voice', 'Krzysztof')
+    rate = str(config.get('rate', 250))
     try:
-        subprocess.run(['say', '-v', voice, text], check=True)
+        subprocess.run(['say', '-v', voice, '-r', rate, text], check=True)
     except (subprocess.CalledProcessError, FileNotFoundError) as e:
         print(f"TTS error: {e}", file=sys.stderr)
 
