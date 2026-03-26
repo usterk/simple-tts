@@ -10,10 +10,10 @@ Instead of switching to your terminal to check what Claude did, you just hear it
 
 ```bash
 # Add marketplace
-/plugin marketplace add usterk/simple-tts-marketplace
+/plugin marketplace add usterk/simple
 
 # Install
-/plugin install simple-tts@usterk-simple-tts-marketplace
+/plugin install simple-tts@usterk-simple
 ```
 
 Then run the interactive setup wizard:
