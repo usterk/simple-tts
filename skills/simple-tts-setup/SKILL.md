@@ -74,24 +74,24 @@ Wait for the user's single response.
 
 Based on choices, do ALL of these in one step:
 
-**4a. Copy hook scripts to ~/.claude/hooks/simple-tts/**
+**4a. Install wrapper script to ~/.claude/hooks/simple-tts/**
 
-Create directory `~/.claude/hooks/simple-tts/` and copy the 3 Python files from the plugin:
+The wrapper is a thin shell script that always runs the latest version of hook scripts from the plugin cache. This means `plugin update` automatically updates the hooks — no re-setup needed.
 
 ```bash
 mkdir -p ~/.claude/hooks/simple-tts
 ```
 
-Then find the plugin's hooks directory in the plugin cache and copy:
+Find and copy only the wrapper:
 ```bash
-PLUGIN_HOOKS=$(find ~/.claude/plugins -path '*/simple-tts/*/hooks/tts_utils.py' -print -quit 2>/dev/null)
-if [ -n "$PLUGIN_HOOKS" ]; then
-  PLUGIN_DIR=$(dirname "$PLUGIN_HOOKS")
-  cp "$PLUGIN_DIR/tts_utils.py" "$PLUGIN_DIR/stop_tts.py" "$PLUGIN_DIR/notification_tts.py" ~/.claude/hooks/simple-tts/
+WRAPPER=$(find ~/.claude/plugins/cache -path '*/simple-tts/*/hooks/wrapper.sh' 2>/dev/null | sort -V | tail -1)
+if [ -n "$WRAPPER" ]; then
+  cp "$WRAPPER" ~/.claude/hooks/simple-tts/wrapper.sh
+  chmod +x ~/.claude/hooks/simple-tts/wrapper.sh
 fi
 ```
 
-If the plugin cache is not found (e.g. using --plugin-dir), look in the current plugin source directory instead.
+If the plugin cache is not found (e.g. using --plugin-dir), look in the source directory for wrapper.sh instead.
 
 **4b. Save config file** `~/.claude/simple-tts-config.json`:
 ```json
@@ -120,7 +120,7 @@ Add these hooks (merge with existing hooks, don't overwrite):
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ~/.claude/hooks/simple-tts/stop_tts.py",
+            "command": "~/.claude/hooks/simple-tts/wrapper.sh stop_tts.py",
             "timeout": 5000
           }
         ]
@@ -132,7 +132,7 @@ Add these hooks (merge with existing hooks, don't overwrite):
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ~/.claude/hooks/simple-tts/notification_tts.py",
+            "command": "~/.claude/hooks/simple-tts/wrapper.sh notification_tts.py",
             "timeout": 5000
           }
         ]
