@@ -9,24 +9,26 @@ Instead of switching to your terminal to check what Claude did, you just hear it
 ## Installation
 
 ```bash
-# Add marketplace
+# 1. Add marketplace
 /plugin marketplace add usterk/simple
 
-# Install
-/plugin install simple-tts@usterk-simple
-```
+# 2. Install plugin
+/plugin install simple-tts@simple
 
-Then run the interactive setup wizard:
-
-```
+# 3. Run setup wizard
 /simple-tts-setup
 ```
 
-The wizard will guide you through:
+The setup wizard will guide you through:
 - Choosing a TTS voice (any voice available on your macOS)
 - Setting your name for personalized greetings (optional, ~30% of messages)
 - Choosing scope: global or project-only
 - Testing the voice
+
+To update:
+```bash
+/plugin update simple-tts@simple
+```
 
 ## How it works
 
