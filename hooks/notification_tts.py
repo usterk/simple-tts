@@ -30,7 +30,7 @@ def translate_notification(message):
 def main():
     input_data = read_hook_input()
     tts_text = translate_notification(input_data.get('message', ''))
-    speak(tts_text)
+    speak(tts_text, priority=True)
     sys.exit(0)
 
 

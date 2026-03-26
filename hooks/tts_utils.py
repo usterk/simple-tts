@@ -7,6 +7,7 @@ import re
 import random
 import subprocess
 import sys
+import time
 
 # Config file location
 CONFIG_PATH = os.path.expanduser("~/.claude/simple-tts-config.json")
@@ -127,11 +128,43 @@ def sanitize_for_polish_tts(text):
     return text
 
 
-def speak(text):
+LOCK_FILE = os.path.expanduser("~/.claude/simple-tts-last-speak")
+
+
+def _recently_spoken(max_age=2.0):
+    """Check if another hook spoke within the last max_age seconds."""
+    try:
+        mtime = os.path.getmtime(LOCK_FILE)
+        return (time.time() - mtime) < max_age
+    except OSError:
+        return False
+
+
+def _mark_spoken():
+    """Mark that we just spoke (touch lock file)."""
+    try:
+        with open(LOCK_FILE, 'w') as f:
+            f.write(str(time.time()))
+    except OSError:
+        pass
+
+
+def speak(text, priority=False):
     """
     Speak text using macOS say command with configured voice.
     Sanitizes English terms and optionally prepends user's name.
+
+    priority=True (notification hook): kills any running say, always speaks.
+    priority=False (stop hook): stays silent if notification just spoke.
     """
+    # Debounce: if notification just spoke, stop hook should stay silent
+    if not priority and _recently_spoken():
+        return
+
+    # Priority speaker kills any overlapping say process
+    if priority:
+        subprocess.run(['pkill', '-x', 'say'], capture_output=True)
+
     config = load_config()
     text = sanitize_for_polish_tts(text)
 
@@ -141,7 +174,9 @@ def speak(text):
             text = f"{name}, {text[0].lower() + text[1:]}" if len(text) > 1 else f"{name}, {text}"
 
     voice = config.get('voice', 'Krzysztof')
-    rate = str(config.get('rate', 250))
+    rate = str(config.get('rate', 220))
+
+    _mark_spoken()
     try:
         subprocess.run(['say', '-v', voice, '-r', rate, text], check=True)
     except (subprocess.CalledProcessError, FileNotFoundError) as e:
