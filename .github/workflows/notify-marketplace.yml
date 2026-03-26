@@ -1,0 +1,19 @@
+name: Notify marketplace
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger marketplace update
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          gh api repos/usterk/simple/dispatches \
+            -f event_type="plugin-update" \
+            -f "client_payload[plugin]=simple-tts" \
+            -f "client_payload[version]=$VERSION"
+        env:
+          GH_TOKEN: ${{ secrets.MARKETPLACE_TOKEN }}
