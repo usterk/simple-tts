@@ -176,14 +176,28 @@ Use this template, replacing `{language}` and `{examples}` based on user's langu
   - Max 10 words, in {language}, contextual to the user's last message
   - Examples: {examples}
   - NEVER generic — always relate to what was actually done or needed
+  - TTS voice is {gender} — use {gender_grammar_rule}
   - TTS voice may mispronounce foreign words. Rules:
     - Prefer {language} descriptions over English acronyms or jargon
     - If a technical name MUST appear, use phonetic spelling readable by the TTS voice
     - NEVER put acronyms (API, GOPATH, JSON, URL) in the TTS tag — describe what they are instead
 ```
 
+**Gender and grammar rules** — determine from the chosen voice name:
+
+Known male voices: Krzysztof, Daniel, Thomas, Alex, Jorge, Luca
+Known female voices: Ewa, Zosia, Samantha, Anna, Amélie, Monica
+
+`{gender}` = "male" or "female"
+`{gender_grammar_rule}` depends on language:
+- **Polish**: male → "masculine verb forms (zrobiłem, znalazłem, naprawiłem)", female → "feminine verb forms (zrobiłam, znalazłam, naprawiłam)"
+- **German**: male → "masculine forms where applicable", female → "feminine forms where applicable"
+- **English/French**: "no grammatical gender adjustment needed"
+- For unknown voices, default to masculine
+
 Example values per language:
-- **Polish**: `"Poprawiłem parser zgodnie z wytycznymi", "Znalazłem błąd w module auth", "Testy przechodzą, mogę commitować?", "Potrzebuję zgody na uruchomienie migracji"`
+- **Polish (male)**: `"Poprawiłem parser zgodnie z wytycznymi", "Znalazłem błąd w module auth", "Testy przechodzą, mogę commitować?", "Potrzebuję zgody na uruchomienie migracji"`
+- **Polish (female)**: `"Poprawiłam parser zgodnie z wytycznymi", "Znalazłam błąd w module auth", "Testy przechodzą, mogę commitować?", "Potrzebuję zgody na uruchomienie migracji"`
 - **English**: `"Fixed the parser as requested", "Found a bug in auth module", "Tests pass, can I commit?", "Need your approval to run migration"`
 - **German**: `"Parser wie gewünscht korrigiert", "Fehler im Auth-Modul gefunden", "Tests bestanden, soll ich committen?", "Brauche Genehmigung für Migration"`
 - **French**: `"Parseur corrigé comme demandé", "Bug trouvé dans le module auth", "Tests réussis, je commit?", "Besoin d'approbation pour la migration"`
