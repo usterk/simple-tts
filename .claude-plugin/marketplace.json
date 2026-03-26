@@ -6,10 +6,7 @@
   "plugins": [
     {
       "name": "simple-tts",
-      "source": {
-        "source": "github",
-        "repo": "usterk/simple-tts"
-      },
+      "source": ".",
       "description": "macOS TTS notifications for Claude Code — speaks contextual summaries when Claude finishes or needs attention",
       "version": "1.0.0"
     }
