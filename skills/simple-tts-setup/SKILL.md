@@ -45,18 +45,28 @@ If not yet configured, proceed to step 3.
 say -v '?' 2>/dev/null
 ```
 
-Show voices relevant to the user's locale and present ALL questions at once:
+Group voices by language. Detect the user's system language from the `LANG` environment variable (e.g. `pl_PL` → Polish, `en_US` → English, `de_DE` → German). Use that as the default language.
+
+Present ALL questions at once:
 
 > **Simple TTS Setup**
 >
 > Available voices on your system:
-> {show relevant voices grouped by language}
+> {show voices grouped by language, highlight the detected default language}
 >
 > Please answer these questions (press Enter to accept defaults):
 >
-> 1. **Voice** [**Krzysztof**]: _which voice to use?_
-> 2. **Your name** [**skip**]: _optional — Claude will sometimes greet you by name (~30% of messages)_
-> 3. **Scope** [**global**]: _"global" (all projects) or "project" (this project only)_
+> 1. **Language** [**{detected, e.g. Polish}**]: _language for TTS messages_
+> 2. **Voice** [**{best voice for chosen language}**]: _which voice to use?_
+> 3. **Your name** [**skip**]: _optional — Claude will sometimes greet you by name (~30% of messages)_
+> 4. **Scope** [**global**]: _"global" (all projects) or "project" (this project only)_
+
+Default voice per language (pick the highest quality available):
+- Polish: Krzysztof (Enhanced) or Ewa (Premium)
+- English: Samantha (Enhanced) or Daniel
+- German: Anna (Enhanced)
+- French: Thomas (Enhanced)
+- For other languages, pick the first Enhanced/Premium voice available
 
 Wait for the user's single response.
 
@@ -87,6 +97,7 @@ If the plugin cache is not found (e.g. using --plugin-dir), look in the current 
 ```json
 {
   "voice": "<chosen>",
+  "language": "<chosen language>",
   "name": "<name or empty string>",
   "name_chance": 0.3
 }
@@ -141,21 +152,30 @@ Target file based on scope:
 
 First READ the existing file (if any). Check if it already contains `<!-- TTS:` instruction. If yes, skip this step and tell the user it's already there.
 
-If not present, **APPEND** (never overwrite existing content!) this block:
+If not present, **APPEND** (never overwrite existing content!) a block adapted to the chosen language.
+
+Use this template, replacing `{language}` and `{examples}` based on user's language choice:
 
 ```
-- Add `<!-- TTS: short message -->` tag at the end of your response when:
+- Add `<!-- TTS: short message in {language} -->` tag at the end of your response when:
   1. Completing a task (what you did in context of user's request)
   2. Before user interaction (what you need or found)
   - This tag is read aloud to the user via macOS TTS so they can switch console knowing the gist of your response without reading it. It must be a natural, spoken-language summary — short enough to hear in a few seconds, specific enough to be useful.
-  - Max 10 words, contextual to the user's last message
-  - Examples: "Fixed the parser as requested", "Found a bug in auth module", "Tests pass, can I commit?", "Need your approval to run migration"
-  - NEVER generic ("Task complete") — always relate to what was actually done or needed
+  - Max 10 words, in {language}, contextual to the user's last message
+  - Examples: {examples}
+  - NEVER generic — always relate to what was actually done or needed
   - TTS voice may mispronounce foreign words. Rules:
-    - Prefer descriptions over acronyms or jargon when possible
+    - Prefer {language} descriptions over English acronyms or jargon
     - If a technical name MUST appear, use phonetic spelling readable by the TTS voice
     - NEVER put acronyms (API, GOPATH, JSON, URL) in the TTS tag — describe what they are instead
 ```
+
+Example values per language:
+- **Polish**: `"Poprawiłem parser zgodnie z wytycznymi", "Znalazłem błąd w module auth", "Testy przechodzą, mogę commitować?", "Potrzebuję zgody na uruchomienie migracji"`
+- **English**: `"Fixed the parser as requested", "Found a bug in auth module", "Tests pass, can I commit?", "Need your approval to run migration"`
+- **German**: `"Parser wie gewünscht korrigiert", "Fehler im Auth-Modul gefunden", "Tests bestanden, soll ich committen?", "Brauche Genehmigung für Migration"`
+- **French**: `"Parseur corrigé comme demandé", "Bug trouvé dans le module auth", "Tests réussis, je commit?", "Besoin d'approbation pour la migration"`
+- For other languages, translate the English examples into the chosen language.
 
 ## Step 5: Test
 
