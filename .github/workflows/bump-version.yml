@@ -7,13 +7,7 @@ on:
 jobs:
   bump:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
-    # RUNNER Z KLASTRA (29.08.2026). Organizacji skonczyly sie 28.08.2026
-    # o 17:29 minuty na maszynach GitHuba i to zadanie przestalo startowac
-    # w ogole ("recent account payments have failed"). Przelacznik awaryjny
-    # jest ZMIENNA REPOZYTORIUM (Settings -> Variables), a nie linia w tym
-    # pliku: gdy padnie klaster, runnerow nie ma, a zmiana pliku wymagalaby
-    # przebiegu, ktorego nie ma jak uruchomic. Wzorzec: guc-net/cluster.
-    runs-on: ${{ vars.RUNNER_KONTROLI || 'guc-net-ci-arc' }}
+    runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
